@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState } from 'react';
 import { toast } from 'react-toastify';
 import type { Email } from '../types';
 
@@ -9,14 +9,11 @@ interface ComposeEmailProps {
 export const ComposeEmail = ({ setEmails }: ComposeEmailProps) => {
   const [form, setForm] = useState({ recipient: '', subject: '', content: '' });
 
-  const handleChange = useCallback(
-    (field: keyof typeof form) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-      setForm((prev) => ({ ...prev, [field]: e.target.value }));
-    },
-    []
-  );
+  const handleChange = (field: keyof typeof form) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setForm((prev) => ({ ...prev, [field]: e.target.value }));
+  };
 
-  const handleSubmit = useCallback(() => {
+  const handleSubmit = () => {
     if (form.recipient && form.subject && form.content) {
       const id = Math.random().toString(36).slice(2);
       const date = new Date().toISOString().split('T')[0];
@@ -35,7 +32,7 @@ export const ComposeEmail = ({ setEmails }: ComposeEmailProps) => {
       setForm({ recipient: '', subject: '', content: '' });
       toast.success('Email sent (simulated)!');
     }
-  }, [form, setEmails]);
+  };
 
   return (
     <div className="p-4 bg-white dark:bg-dark-bg">

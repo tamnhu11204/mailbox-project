@@ -1,13 +1,13 @@
 import { useState } from 'react';
-import { mailboxes, emails as initialEmails } from './data';
-import type { Email } from './types';
-import { Moon, Sun } from 'lucide-react';
+import { ToastContainer } from 'react-toastify';
 import { MailboxTree } from './components/MailboxTree';
-import { MailboxList } from './components/MailboxList';
 import { EmailContent } from './components/EmailContent';
 import { ComposeEmail } from './components/ComposeEmail';
-import { ToastContainer } from 'react-toastify';
 import { useDarkMode } from './hooks/useDarkMode';
+import { mailboxes, emails as initialEmails } from './data';
+import { Sun, Moon } from 'lucide-react';
+import { MailboxList } from './components/MailboxList';
+import type { Email } from './types';
 
 function App() {
   const [emails, setEmails] = useState<Email[]>(initialEmails);
