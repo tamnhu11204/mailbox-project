@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Trash2 } from 'lucide-react';
+import { Trash2, RotateCcw } from 'lucide-react';
 import { toast } from 'react-toastify';
 import React from 'react';
 import type { Email } from '../types';
@@ -12,8 +12,24 @@ interface EmailListProps {
   setEmails: React.Dispatch<React.SetStateAction<Email[]>>;
 }
 
+interface DeletedEmail extends Email {
+  originalMailboxId: string;
+}
+
 const EmailListItem = React.memo(
-  ({ email, onSelect, onDelete }: { email: Email; onSelect: () => void; onDelete: (e: React.MouseEvent) => void }) => {
+  ({
+    email,
+    onSelect,
+    onDelete,
+    onRestore,
+    isTrash,
+  }: {
+    email: Email;
+    onSelect: () => void;
+    onDelete: (e: React.MouseEvent) => void;
+    onRestore: (e: React.MouseEvent) => void;
+    isTrash: boolean;
+  }) => {
     return (
       <div
         className="flex justify-between p-2 border-b hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer"
@@ -24,21 +40,23 @@ const EmailListItem = React.memo(
           <p className="text-sm text-gray-500 dark:text-gray-400">{email.sender}</p>
           <p className="text-sm text-gray-500 dark:text-gray-400">{email.date}</p>
         </div>
-        <button onClick={onDelete} className="text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300">
-          <Trash2 />
+        <button
+          onClick={isTrash ? onRestore : onDelete}
+          className="text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300"
+        >
+          {isTrash ? <RotateCcw /> : <Trash2 />}
         </button>
       </div>
     );
   }
 );
 
-export const MailboxList = ({ emails, selectedMailboxId, onSelectEmail, selectedEmailId, setEmails }: EmailListProps) => {
+export const EmailList = ({ emails, selectedMailboxId, onSelectEmail, selectedEmailId, setEmails }: EmailListProps) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [sortBy, setSortBy] = useState<'date' | 'subject' | 'sender'>('date');
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
-  const [deletedEmails, setDeletedEmails] = useState<Email[]>([]); // Thay useRef bằng useState
+  const [deletedEmails, setDeletedEmails] = useState<DeletedEmail[]>([]);
 
-  // Lọc và sắp xếp trực tiếp, không dùng useMemo
   let filteredEmails = emails.filter(
     (email) =>
       email.mailboxId === selectedMailboxId &&
@@ -55,27 +73,77 @@ export const MailboxList = ({ emails, selectedMailboxId, onSelectEmail, selected
     return sortOrder === 'asc' ? aValue.localeCompare(bValue) : bValue.localeCompare(aValue);
   });
 
-  // Hàm xóa email, không dùng useCallback
   const deleteEmail = (emailId: string) => {
+    console.log('Current emails before delete:', emails);
     const email = emails.find((e) => e.id === emailId);
     if (email) {
-      setDeletedEmails((prev) => [...prev, { ...email, mailboxId: 'trash' }]);
-      setEmails((prev) => prev.map((e) => (e.id === emailId ? { ...e, mailboxId: 'trash' } : e)));
+      console.log('Deleting email:', { id: email.id, subject: email.subject, mailboxId: email.mailboxId });
+      setDeletedEmails((prev) => {
+        const newDeletedEmails = [...prev, { ...email, originalMailboxId: email.mailboxId }];
+        console.log('Updated deletedEmails:', newDeletedEmails);
+        return newDeletedEmails;
+      });
+      setEmails((prev) => {
+        const newEmails = prev.map((e) => (e.id === emailId ? { ...e, mailboxId: 'trash' } : e));
+        console.log('Updated emails after delete:', newEmails);
+        return newEmails;
+      });
       if (selectedEmailId === emailId) onSelectEmail(null);
-      toast.info('Email moved to Trash', {
+      const toastId = toast.info('Email moved to Trash. Click to undo.', {
         autoClose: 5000,
+        closeOnClick: false,
         onClick: () => {
+          console.log('Undoing delete for email:', emailId);
           setEmails((prev) => {
             const deletedEmail = deletedEmails.find((e) => e.id === emailId);
             if (deletedEmail) {
-              setDeletedEmails((prevDeleted) => prevDeleted.filter((e) => e.id !== emailId));
-              return prev.map((e) => (e.id === emailId ? { ...e, mailboxId: deletedEmail.mailboxId } : e));
+              console.log('Restoring email:', { id: deletedEmail.id, originalMailboxId: deletedEmail.originalMailboxId });
+              setDeletedEmails((prevDeleted) => {
+                const newDeletedEmails = prevDeleted.filter((e) => e.id !== emailId);
+                console.log('Updated deletedEmails after undo:', newDeletedEmails);
+                return newDeletedEmails;
+              });
+              const newEmails = prev.map((e) =>
+                e.id === emailId ? { ...e, mailboxId: deletedEmail.originalMailboxId } : e
+              );
+              console.log('Emails after undo:', newEmails);
+              return newEmails;
             }
+            console.warn('Deleted email not found for undo:', emailId);
             return prev;
           });
-          toast.dismiss();
+          toast.dismiss(toastId);
         },
       });
+      console.log('Toast displayed with ID:', toastId);
+    } else {
+      console.warn('Email not found for delete:', emailId);
+    }
+  };
+
+  const restoreEmail = (emailId: string) => {
+    console.log('Current emails before restore:', emails);
+    const deletedEmail = deletedEmails.find((e) => e.id === emailId);
+    if (deletedEmail) {
+      console.log('Restoring email:', { id: deletedEmail.id, originalMailboxId: deletedEmail.originalMailboxId });
+      setEmails((prev) => {
+        const newEmails = prev.map((e) =>
+          e.id === emailId ? { ...e, mailboxId: deletedEmail.originalMailboxId } : e
+        );
+        console.log('Emails after restore:', newEmails);
+        return newEmails;
+      });
+      setDeletedEmails((prev) => {
+        const newDeletedEmails = prev.filter((e) => e.id !== emailId);
+        console.log('Updated deletedEmails after restore:', newDeletedEmails);
+        return newDeletedEmails;
+      });
+      if (selectedEmailId === emailId) onSelectEmail(null);
+      toast.success('Email restored to ' + deletedEmail.originalMailboxId + '.', {
+        autoClose: 3000,
+      });
+    } else {
+      console.warn('Deleted email not found for restore:', emailId);
     }
   };
 
@@ -119,6 +187,11 @@ export const MailboxList = ({ emails, selectedMailboxId, onSelectEmail, selected
               e.stopPropagation();
               deleteEmail(email.id);
             }}
+            onRestore={(e) => {
+              e.stopPropagation();
+              restoreEmail(email.id);
+            }}
+            isTrash={selectedMailboxId === 'trash'}
           />
         ))
       )}

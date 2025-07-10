@@ -3,11 +3,11 @@ import { ToastContainer } from 'react-toastify';
 import { MailboxTree } from './components/MailboxTree';
 import { EmailContent } from './components/EmailContent';
 import { ComposeEmail } from './components/ComposeEmail';
-import { useDarkMode } from './hooks/useDarkMode';
 import { mailboxes, emails as initialEmails } from './data';
 import { Sun, Moon } from 'lucide-react';
-import { MailboxList } from './components/MailboxList';
 import type { Email } from './types';
+import { useDarkMode } from './hooks/useDarkMode';
+import { EmailList } from './components/EmailList';
 
 function App() {
   const [emails, setEmails] = useState<Email[]>(initialEmails);
@@ -34,7 +34,7 @@ function App() {
         </div>
       </div>
       <div className="w-1/3 border-r dark:border-dark-border">
-        <MailboxList
+        <EmailList
           emails={emails}
           selectedMailboxId={selectedMailboxId}
           onSelectEmail={setSelectedEmailId}
