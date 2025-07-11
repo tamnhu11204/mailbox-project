@@ -1,8 +1,7 @@
 @import "tailwindcss";
-
 @import "react-toastify/dist/ReactToastify.css";
 
 .dark {
-  background-color: #1f2937;
+  background-color: #111;
   color: #e5e7eb;
 }

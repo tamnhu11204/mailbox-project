@@ -8,7 +8,6 @@ export const useDarkMode = () => {
   });
 
   useEffect(() => {
-    console.log('Dark mode:', isDarkMode); // Debug
     if (isDarkMode) {
       document.documentElement.classList.add('dark');
       localStorage.setItem('theme', 'dark');

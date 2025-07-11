@@ -35,21 +35,23 @@ export const ComposeEmail = ({ setEmails }: ComposeEmailProps) => {
   };
 
   return (
-    <div className="p-4 bg-white dark:bg-dark-bg">
-      <h2 className="text-xl font-bold mb-2 dark:text-dark-text">Compose Email</h2>
+    <div className="p-4 bg-amber-50 dark:bg-dark-bg">
+      <h2 className="text-xl font-bold mb-2 text-sky-800 dark:text-sky-200">Compose Email</h2>
       <input
         type="text"
         placeholder="To"
         value={form.recipient}
         onChange={handleChange('recipient')}
-        className="p-2 border rounded w-full mb-2 dark:bg-gray-800 dark:text-dark-text dark:border-dark-border"
+        className="p-2 border rounded w-full mb-2 
+        dark:bg-gray-800 dark:text-dark-text dark:border-dark-border"
       />
       <input
         type="text"
         placeholder="Subject"
         value={form.subject}
         onChange={handleChange('subject')}
-        className="p-2 border rounded w-full mb-2 dark:bg-gray-800 dark:text-dark-text dark:border-dark-border"
+        className="p-2 border rounded w-full mb-2 
+        dark:bg-gray-800 dark:text-dark-text dark:border-dark-border"
       />
       <textarea
         placeholder="Content"
@@ -59,7 +61,7 @@ export const ComposeEmail = ({ setEmails }: ComposeEmailProps) => {
       />
       <button
         onClick={handleSubmit}
-        className="bg-blue-500 text-white p-2 rounded hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700"
+        className="bg-blue-500 text-white p-2 rounded hover:bg-sky-900 dark:bg-blue-600 dark:hover:bg-blue-700"
       >
         Send
       </button>
