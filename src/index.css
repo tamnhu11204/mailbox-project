@@ -1,7 +1,34 @@
 @import "tailwindcss";
 @import "react-toastify/dist/ReactToastify.css";
 
+
 .dark {
   background-color: #111;
   color: #e5e7eb;
+}
+
+.sidebar {
+  background-color: #fff;
+}
+
+.dark .sidebar {
+  background-color: #111;
+}
+
+.bg {
+  background-color: #fff;
+}
+
+.dark .bg {
+  background-color: #111;
+}
+
+.color-button {
+  background-color: #0a2b5e;
+  color: #fff
+}
+
+.dark .color-button {
+  background-color: #cedcf1;
+  color: #111
 }

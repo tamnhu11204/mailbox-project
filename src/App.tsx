@@ -16,12 +16,13 @@ function App() {
   const { isDarkMode, toggleDarkMode } = useDarkMode();
 
   return (
+    
     <div className="flex h-screen">
       <div className="w-1/4 border-r dark:border-dark-border">
         <div className="p-4">
           <button
             onClick={toggleDarkMode}
-            className="mb-4 p-2 bg-gray-200 dark:bg-gray-700 rounded flex items-center"
+            className="mb-4 p-2 color-button rounded flex items-center"
           >
             {isDarkMode ? <Sun className="mr-2" /> : <Moon className="mr-2" />}
             {isDarkMode ? 'Light Mode' : 'Dark Mode'}

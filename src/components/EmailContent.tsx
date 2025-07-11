@@ -13,11 +13,11 @@ export const EmailContent = ({ emails, selectedEmailId }: EmailContentProps) => 
   }
 
   return (
-    <div className="p-4 bg-white dark:bg-dark-bg">
+    <div className="p-4 bg">
       <h2 className="text-xl font-bold dark:text-dark-text">{email.subject}</h2>
-      <p className="text-sm text-gray-500 dark:text-gray-400">From: {email.sender}</p>
-      <p className="text-sm text-gray-500 dark:text-gray-400">To: {email.recipient}</p>
-      <p className="text-sm text-gray-500 dark:text-gray-400">Date: {email.date}</p>
+      <p className="text-sm sub-text">From: {email.sender}</p>
+      <p className="text-sm sub-text">To: {email.recipient}</p>
+      <p className="text-sm sub-text">Date: {email.date}</p>
       <hr className="my-2 dark:border-dark-border" />
       <p className="dark:text-dark-text">{email.content}</p>
     </div>

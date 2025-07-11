@@ -24,7 +24,7 @@ const MailboxItem = React.memo(
       <div>
         <div
           className={`flex items-center p-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 ${
-            isSelected ? 'bg-gray-200 dark:bg-gray-600 font-bold' : ''
+            isSelected ? 'bg font-bold' : ''
           }`}
           style={{ paddingLeft: `${level * 1.5}rem` }}
           onClick={handleSelect}
@@ -56,7 +56,7 @@ const MailboxItem = React.memo(
 
 export const MailboxTree = ({ mailboxes, onSelectMailbox, selectedMailboxId }: MailboxTreeProps) => {
   return (
-    <div className="p-4 bg-gray-100 dark:bg-dark-sidebar h-full">
+    <div className="p-4 sidebar h-full">
       {mailboxes.map((mailbox) => (
         <MailboxItem
           key={mailbox.id || `mailbox-${mailbox.name}`}

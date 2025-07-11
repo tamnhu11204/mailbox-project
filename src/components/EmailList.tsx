@@ -148,19 +148,19 @@ export const EmailList = ({ emails, selectedMailboxId, onSelectEmail, selectedEm
   };
 
   return (
-    <div className="p-4 bg-white dark:bg-dark-bg h-full">
+    <div className="p-4 bg h-full">
       <div className="mb-4 flex space-x-2">
         <input
           type="text"
           placeholder="Search emails..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="p-2 border rounded w-full dark:bg-gray-800 dark:text-dark-text dark:border-dark-border"
+          className="p-2 rounded w-full color-button"
         />
         <select
           value={sortBy}
           onChange={(e) => setSortBy(e.target.value as 'date' | 'subject' | 'sender')}
-          className="p-2 border rounded dark:bg-gray-800 dark:text-dark-text dark:border-dark-border"
+          className="p-2 border rounded color-button"
         >
           <option value="date">Sort by Date</option>
           <option value="subject">Sort by Subject</option>
@@ -169,7 +169,7 @@ export const EmailList = ({ emails, selectedMailboxId, onSelectEmail, selectedEm
         <select
           value={sortOrder}
           onChange={(e) => setSortOrder(e.target.value as 'asc' | 'desc')}
-          className="p-2 border rounded dark:bg-gray-800 dark:text-dark-text dark:border-dark-border"
+          className="p-2 border rounded color-button"
         >
           <option value="asc">Ascending</option>
           <option value="desc">Descending</option>
